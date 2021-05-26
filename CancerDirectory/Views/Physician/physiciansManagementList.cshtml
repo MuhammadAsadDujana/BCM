@@ -1,0 +1,353 @@
+﻿@model System.Collections.Generic.IEnumerable<OA.Data.Model.Physician>
+@using OA.Data.Helper
+
+@{
+    ViewBag.Title = "Physicians";
+}
+
+
+
+
+<style>
+    /*  .toggle-vis {
+        cursor: pointer;
+        color: blue;
+    }*/
+    tr {
+        text-align: center;
+    }
+
+    a {
+        cursor: pointer;
+        color: #3174c7;
+        text-decoration: none;
+    }
+</style>
+
+<!-- Main content -->
+<div class="content setTop-margin">
+
+    <div class="container-fluid px-4">
+        <div class="content-header">
+            <div class="input-group searchGroup col-md-4">
+                @*<input id="search" type="text" class="form-control" placeholder="Search" disabled="disabled">
+                    <span class="input-group-append">
+                        <button id="search-button" type="button" class="btn srch-btn">Search</button>
+                    </span>*@
+            </div>
+            <a href="~/Physician/addNewPhysician" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add New Physician</a>
+        </div>
+
+
+        <div class="mt-5">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+
+
+                <div class="tab-pane fade active show" id="tab1" role="tabpanel" aria-labelledby="tab-1">
+                    <div class="main_table">
+                        <div class="row mt-4">
+
+                            @*<div class="col-12">
+                                    Show/hide columns: <a class="toggle-vis" data-column="0">Picture</a> - <a class="toggle-vis" data-column="1">First Name</a> - <a class="toggle-vis" data-column="2">Last Name</a> - <a class="toggle-vis" data-column="3">Direct Phone</a> - <a class="toggle-vis" data-column="4">Status</a> - <a class="toggle-vis" data-column="5">Updated on</a>
+                                </div>*@
+
+                            <div class="col-12">
+
+
+
+                                <div class="card p-3">
+                                    <!-- /.card-header -->
+
+                                    <div class="card-body physicians-table table-responsive p-0">
+
+
+                                        <table id="example" class="table table-hover text-center">
+                                            <thead>
+                                                <tr class="bg-grey">
+                                                    <th>Picture</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Direct Phone</th>
+                                                    <th>Status</th>
+                                                    <th>Joining date</th>
+                                                    @*<th>Email</th>*@
+                                                    <th>Specialties</th>
+                                                    <th>Disciplines</th>
+                                                    <th>Treatment Teams</th>
+                                                    <th style="min-width:150px">Action</th>
+                                                    <th><a href="javascript:void(0)" class="view-btn" data-toggle="modal" data-target="#myModal"><i class="fas fa-ellipsis-h"></i></a></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                <tr>
+                                                    <td>
+                                                        @*@if (item.ProfileImage == null || item.ProfileImage == "~/Content/theme/img/profile.png")
+            {
+
+                <div class="user-block user-image">
+                    <img id="Picture" class="img-circle img-bordered-sm" src="~/Content/theme/img/avatar2.png" alt="User Image">
+                </div>
+            }
+            else
+            {
+                <div class="user-block user-image">
+                    <img id="Picture" class="img-circle img-bordered-sm" src="@Url.Content(item.ProfileImage)" alt="User Image">
+                </div>
+            }*@
+
+                                                        @if (!String.IsNullOrEmpty(item.ProfileImage))
+                                                        {
+                                                            <div class="user-block user-image">
+                                                                <img class="img-circle img-bordered-sm" src="@Url.Content(TripleDESCryptography.Decrypt(item.ProfileImage))" alt="User Image">
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="user-block user-image">
+                                                                <img class="img-circle img-bordered-sm" src="~/Content/theme/img/profileeee.jpg" alt="User Image">
+                                                            </div>
+                                                        }
+
+                                                    </td>
+                                                    <td>@item.FirstName</td>
+                                                    <td>@item.LastName</td>
+                                                    @{
+                                                        string DirectPhoneformatted = null;
+                                                        if (@item.DirectPhone != null)
+                                                        {
+                                                            string phonee = @item.DirectPhone.ToString();
+                                                            string areaa = phonee.Substring(0, 3);
+                                                            string majorr = phonee.Substring(3, 3);
+                                                            string minorr = phonee.Substring(6);
+                                                            DirectPhoneformatted = string.Format("({0}) {1}-{2}", areaa, majorr, minorr);
+                                                        }
+
+                                                    }
+                                                     <td>@DirectPhoneformatted</td>
+                                                    @if (item.Status == 0)
+                                                    {
+                                                        <td>UnPublished</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>Published</td>
+                                                    }
+
+                                                    <td>@item.JoiningDate.ToString("d")</td>
+                                                    <td>@item.DisplaySpecialtiesTitle</td>
+                                                    <td>@item.DisplayDisciplineTitle</td>
+                                                    <td>@item.DisplayTreatmentTeamTitle</td>
+                                                    @*<td>@item.Email</td>*@
+                                                    <td>
+                                                        <a href="~/Physician/ViewPhysician?physicianId=@item.PhysicianId" class="view-btn"><i class="fas fa-eye"></i></a>
+                                                        <a href="~/Physician/EditPhysician?physicianId=@item.PhysicianId" class="view-btn"><i class="fas fa-user-edit"></i></a>
+                                                        <a href="javascript:dataAccess.physicianService.deletePhysician('@item.PhysicianId')" class="view-btn"><i class="fas fa-trash-alt"></i></a>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- The Modal -->
+<div class="modal logout-dialog" id="myModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Show/hide columns</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-left">
+                <div id="chboxes">
+
+                    <div class="list_view">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Picture
+                                        <input name="list" data-target="0" type="checkbox" value="Picture" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        First Name
+                                        <input name="list" data-target="1" type="checkbox" value="FirstName" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Last Name
+                                        <input name="list" data-target="2" type="checkbox" value="LastName" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Direct Phone
+                                        <input name="list" data-target="3" type="checkbox" value="DirectPhone" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Status
+                                        <input name="list" data-target="4" type="checkbox" value="Status" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Joining date
+                                        <input name="list" data-target="5" type="checkbox" value="Updatedon" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Specialties
+                                        <input name="list" data-target="6" type="checkbox" value="Specialties" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Disciplines
+                                        <input name="list" data-target="7" type="checkbox" value="Disciplines" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="check-container">
+                                        Treatment Teams
+                                        <input name="list" data-target="8" type="checkbox" value="TreatmentTeams" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+                                @*<div class="form-group">
+            <label class="check-container">
+                Email
+                <input name="list" data-target="6" type="checkbox" value="Email">
+                <span class="checkmark"></span>
+            </label>
+        </div>*@
+                                @*<div class="form-group">
+            <label class="check-container">
+                OfficePhone
+                <input name="list" data-target="7" type="checkbox" value="OfficePhone">
+                <span class="checkmark"></span>
+            </label>
+        </div>*@
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <!-- Modal footer -->
+            @*<div class="modal-footer">
+                    <div class="buttons-group text-center w-100">
+                        <button id="btnshowColumns" class="btn flat-btn">Add</button>
+                    </div>
+                </div>*@
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        //alert(1);
+        var table = $('#example').DataTable({
+            //"scrollY": "68vh",
+            //"scrollCollapse": false,
+            "searching": true,
+            //"paging": true,
+            autoWidth: true,
+            responsive: true
+        });
+
+        //$('a.toggle-vis').on('click', function (e) {
+        //    e.preventDefault();
+
+        //    // Get the column API object
+        //    var column = table.column($(this).attr('data-column'));
+
+        //    // Toggle the visibility
+        //    column.visible(!column.visible());
+        //});
+
+        $('.list_view input[type="checkbox"]').on('change', function (e) {
+            debugger;
+            //alert(3);
+          
+                // Get the column API object
+                var col = table.column($(this).attr('data-target'));
+
+                // Toggle the visibility
+                col.visible(!col.visible());
+           
+       
+        });
+    });
+
+
+        ////custom search functionality
+        //$("#search-button").click(function () {
+        //    debugger;
+        //    $.each($("#table tbody tr"), function () {
+
+        //        if ($(this).text().toLowerCase().indexOf($('#search').val().toLowerCase()) === -1)
+        //            $(this).hide();
+        //        else
+        //            $(this).show();
+        //    });
+        //});
+
+</script>

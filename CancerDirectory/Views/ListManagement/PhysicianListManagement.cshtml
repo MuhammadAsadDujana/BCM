@@ -1,0 +1,278 @@
+﻿
+@{
+    ViewBag.Title = "List Management";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<!-- Main content -->
+<div class="content setTop-margin">
+    <div class="container-fluid px-4">
+        <div class="content-header">
+        </div>
+        <div class="">
+            <ul class="nav nav-tabs nav-userTab" id="custom-tabs-two-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="tab-1" data-toggle="pill" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Specialties</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-2" data-toggle="pill" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Diciplines</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-3" data-toggle="pill" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Treatment Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tab-4" data-toggle="pill" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Credentials</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-4" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade active show" id="tab1" role="tabpanel" aria-labelledby="tab-1">
+                    <div class="main_table">
+                        <div class="row mt-4">
+                            <div class="col-md-9">
+                                <div class="custom-list">
+                                    <div class="add-btn">
+                                        <a href="~/ListManagement/addNewSpecialty" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add New</a>
+                                    </div>
+                                    <div class="card p-3">
+                                        <!-- /.card-header -->
+                                        <div class="card-body physicians-table table-responsive p-0">
+                                            <table id="tblSpecialties" class="table table-hover">
+                                                <thead>
+                                                    <tr class="bg-grey">
+                                                        <th><h3>Specialties</h3></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @{
+                                                        IEnumerable<OA.Data.Model.Specialties> lstSpecialties = ViewBag.ddlSpecialties;
+                                                        foreach (var item in lstSpecialties)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SpecialtyTitle</td>
+                                                                <td class="text-right">
+                                                                    <a href="~/ListManagement/Edit?SpecialtyId=@item.SpecialtyId" class="view-btn"><i class="fas fa-edit"></i></a>
+                                                                    @*<a href="~/ListManagement/DeleteSpecialty?SpecialtyId=@item.SpecialtyId" class="view-btn"><i class="fas fa-trash-alt"></i></a>*@
+                                                                    <a href="javascript:dataAccess.listManagementService.deleteSpecialty('@item.SpecialtyId')" class="view-btn"><i class="fas fa-trash-alt"></i></a>
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab-2">
+                    <div class="main_table">
+                        <div class="row mt-4">
+                            <div class="col-md-9">
+                                <div class="custom-list">
+                                    <div class="add-btn">
+                                        <a href="~/ListManagement/addNewDiscipline" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add new</a>
+                                    </div>
+                                    <div class="card p-3">
+                                        <!-- /.card-header -->
+                                        <div class="card-body physicians-table table-responsive p-0">
+                                            <table id="tblDiscipline" class="table table-hover">
+                                                <thead>
+                                                    <tr class="bg-grey">
+                                                        <th><h3>Discipline</h3></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @{
+                                                        IEnumerable<OA.Data.Model.Discipline> lstDisciplines = ViewBag.ddlDisciplines;
+                                                        foreach (var item in lstDisciplines)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.DisciplineTitle</td>
+                                                                <td class="text-right">
+                                                                    <a href="~/ListManagement/Edit?DisciplineId=@item.DisciplineId" class="view-btn"><i class="fas fa-edit"></i></a>
+                                                                    <a href="javascript:dataAccess.listManagementService.deleteDiscipline('@item.DisciplineId')" class="view-btn"><i class="fas fa-trash-alt"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab-3">
+                    <div class="main_table">
+                        <div class="row mt-4">
+                            <div class="col-md-9">
+                                <div class="custom-list">
+                                    <div class="add-btn">
+                                        <a href="~/ListManagement/addNewTreatmentTeam" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add new</a>
+                                    </div>
+                                    <div class="card p-3">
+                                        <!-- /.card-header -->
+                                        <div class="card-body physicians-table table-responsive p-0">
+                                            <table id="tblTreatment" class="table table-hover">
+                                                <thead>
+                                                    <tr class="bg-grey">
+                                                        <th><h3>Treatment Teams</h3></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @{
+                                                        IEnumerable<OA.Data.Model.TreatmentTeam> lstTreatmentTeam = ViewBag.ddlTreatmentTeams;
+                                                        foreach (var item in lstTreatmentTeam)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.DiseaseTitle</td>
+                                                                <td class="text-right">
+                                                                    <a href="~/ListManagement/Edit?TreatmentTeamId=@item.TreatmentTeamId" class="view-btn"><i class="fas fa-edit"></i></a>
+                                                                    <a href="javascript:dataAccess.listManagementService.deleteTreatment('@item.TreatmentTeamId')" class="view-btn"><i class="fas fa-trash-alt"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab-4">
+                    <div class="main_table">
+                        <div class="row mt-4">
+                            <div class="col-md-9">
+                                <div class="custom-list">
+                                    <div class="add-btn">
+                                        <a href="~/ListManagement/addNewCredential" class="btn btn-success"><i class="fas fa-plus-circle"></i> Add new</a>
+                                    </div>
+                                    <div class="card p-3">
+                                        <!-- /.card-header -->
+                                        <div class="card-body physicians-table table-responsive p-0">
+                                            <table id="tblCredentials" class="table table-hover">
+                                                <thead>
+                                                    <tr class="bg-grey">
+                                                        <th><h3>Credentials</h3></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @{
+                                                        IEnumerable<OA.Data.Model.Credentials> lstCredentials = ViewBag.ddlCredentials;
+                                                        foreach (var item in lstCredentials)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CredentialsTitle</td>
+                                                                <td class="text-right">
+                                                                    <a href="~/ListManagement/Edit?CredentialsId=@item.CredentialsId" class="view-btn"><i class="fas fa-edit"></i></a>
+                                                                    <a href="javascript:dataAccess.listManagementService.deleteCredential('@item.CredentialsId')" class="view-btn"><i class="fas fa-trash-alt"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
+<!-- /.content-wrapper -->
+<script>
+  
+    $(document).ready(function () {
+
+        var table = $('#tblSpecialties').DataTable({
+            //"scrollY": "68vh",
+            //"scrollCollapse": false,
+            "searching": true,
+            //"paging": true,
+            autoWidth: true,
+            responsive: true
+        });
+
+        var table = $('#tblDiscipline').DataTable({
+            //"scrollY": "68vh",
+            //"scrollCollapse": false,
+            "searching": true,
+            //"paging": true,
+            autoWidth: true,
+            responsive: true
+        });
+
+        var table = $('#tblTreatment').DataTable({
+            //"scrollY": "68vh",
+            //"scrollCollapse": false,
+            "searching": true,
+            //"paging": true,
+            autoWidth: true,
+            responsive: true
+        });
+
+        var table = $('#tblCredentials').DataTable({
+            //"scrollY": "68vh",
+            //"scrollCollapse": false,
+            "searching": true,
+            //"paging": true,
+            autoWidth: true,
+            responsive: true
+        });
+
+
+        debugger;
+        var tech = window.location.href.split('#')[1] || ''.split('#')[0];
+        if (tech === 'tab1') {
+            $("#tab-1").click();
+        }
+        else if (tech === 'tab2') {
+            $("#tab-2").click();
+        }
+        else if (tech === 'tab3') {
+            $("#tab-3").click();
+        }
+        else if (tech === 'tab4') {
+            $("#tab-4").click();
+        }
+        else {
+            $("#tab-1").click();
+        }
+
+    });
+
+   
+   
+</script>

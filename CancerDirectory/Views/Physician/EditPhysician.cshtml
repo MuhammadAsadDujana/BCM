@@ -1,0 +1,634 @@
+﻿@*@model OA.Data.Model.Physician*@
+@using OA.Data.Helper
+@{
+
+    ViewBag.Title = "Edit Physician";
+    
+}
+@using OA.Data.Model
+<link href="~/Content/theme/css/select2.min.css" rel="stylesheet" />
+<link href="~/Content/theme/css/select2-bootstrap4.min.css" rel="stylesheet" />
+
+
+<style>
+    #imageUpload {
+        display: none;
+    }
+
+    #profileImage {
+        cursor: pointer;
+    }
+
+    #profile-container {
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        -o-border-radius: 50%;
+        border-radius: 50%;
+        border: 2px solid #cacaca;
+    }
+
+        #profile-container img {
+            width: 150px;
+            height: 150px;
+        }
+</style>
+
+<!-- Main content -->
+<div class="container-fluid px-4">
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <form id="myfrm" enctype="multipart/form-data">
+
+                <input id="txtPhysicianId" value="@Model.PhysicianId" type="hidden">
+                <input id="txtProfileImage" value="@Model.ProfileImage" type="hidden">
+
+                <div class="row mb-3 pb-3">
+                    <div class="col-lg-2">
+                        <div class="image_wrap">
+
+                            @if (!String.IsNullOrEmpty(Model.ProfileImage))
+                            {
+                                <div id="profile-container">
+                                    <image id="setImage" src="@Url.Content(TripleDESCryptography.Decrypt(Model.ProfileImage))" class="img-fluid" alt="" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div id="profile-container">
+                                    <image id="setImage" src="~/Content/theme/img/profile.png" class="img-fluid" alt="" />
+                                </div>
+                            }
+                            <input id="imageUpload" type="file"
+                                   name="imageUpload" placeholder="Photo" accept="image/*">
+
+                            @*<div class="profile_img">
+            <img id="profileImage" src="~/Content/theme/img/profile.png" class="img-fluid" alt="">
+        </div>*@
+
+
+                            <div class="profile_btn_group">
+
+                                <span id="profileImage" class="btnLink profile_upload_btn">
+                                    <i class="fas fa-camera"></i>
+                                </span>
+                                @*<span class="btnLink profile_setting_btn">
+                <i class="fas fa-tools"></i>
+            </span>*@
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+                <!-- row -->
+                <div class="profile-form mb-5">
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Credentials*</label>
+
+
+                                <select required="" id="ddlCredentials" class="credentials select2-hidden-accessible" multiple="multiple" data-placeholder="Select credentials" style="width: 100%;" data-select2-id="40" tabindex="-1" aria-hidden="true">
+                                    @{
+                                        IEnumerable<Credentials> lstCredentials = ViewBag.dbCredentialsList;
+                                        IEnumerable<Credentials> lstEditCredentials = ViewBag.CredentialsEditList;
+
+                                        foreach (var item in lstCredentials)
+                                        {
+                                            bool IsFind = false;
+
+                                            if (lstEditCredentials != null)
+                                            {
+                                                foreach (var item1 in lstEditCredentials)
+                                                {
+                                                    if (item.CredentialsId == item1.CredentialsId)
+                                                    {
+                                                        <option data-select2-id="@item.CredentialsId" selected value="@item.CredentialsId">@item.CredentialsTitle</option>
+                                                        IsFind = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+
+                                            if (IsFind == false)
+                                            {
+                                                <option data-select2-id="@item.CredentialsId" value="@item.CredentialsId">@item.CredentialsTitle</option>
+                                            }
+                                        }
+
+                                        @*foreach (var item in lstCredentials)
+            {
+
+                if (lstEditCredentials != null)
+                {
+                    foreach (var item1 in lstEditCredentials)
+                    {
+                        if (item1.CredentialsId == item.CredentialsId)
+                        {
+                            <option data-select2-id="@item.CredentialsId" value="@item.CredentialsId" selected="selected">@item.CredentialsTitle</option>
+                        }
+                        else
+                        {
+                            <option data-select2-id="@item.CredentialsId" value="@item.CredentialsId">@item.CredentialsTitle</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option data-select2-id="@item.CredentialsId" value="@item.CredentialsId">@item.CredentialsTitle</option>
+                }
+
+
+            }*@
+
+
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status*</label>
+                                <select required="" id="ddlStatus" class="form-control" placeholder="Select status">
+                                    @*<option value="-1">Select</option>*@
+                                    @if (Model.Status == 0)
+                                    {
+                                        <option value="1">Published</option>
+                                        <option value="0" selected="selected">Unpublished</option>
+
+                                    }
+                                    else
+                                    {
+                                        <option value="1" selected="selected">Published</option>
+                                        <option value="0">Unpublished</option>
+                                    }
+
+                                    @*<option value="2">Blocked</option>*@
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>First Name*</label>
+                                <input value="@Model.FirstName" required="" id="txtFirstName" type="text" class="form-control" name="" placeholder="John">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Last Name*</label>
+                                <input value="@Model.LastName" required="" id="txtLastName" type="text" class="form-control" name="" placeholder="Doe">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Direct Phone</label>
+                                <input type="tel" onkeypress="return isNumberKey(event)" placeholder="xxx xxx xxxx numbers only" maxlength="10" value="@Model.DirectPhone"  id="txtDirectPhone" class="form-control" name="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Office Phone</label>
+                                <input type="tel" onkeypress="return isNumberKey(event)" maxlength="10" placeholder="xxx xxx xxxx numbers only" value="@Model.OfficePhone"  id="txtOfficePhone" class="form-control" name="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input value="@Model.Email" id="txtEmail" type="email" class="form-control" name="" placeholder="john@gmail.com">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Language</label>
+
+                                <select id="ddlLanguages" class="language select2-hidden-accessible" multiple="" data-placeholder="Select language" style="width: 100%;" data-select2-id="70" tabindex="-1" aria-hidden="true">
+                                    @{
+                                        IEnumerable<Language> lstLanguages = ViewBag.dbLanguagesList;
+                                        IEnumerable<Language> lstEditLanguages = ViewBag.LanguagesEditList;
+
+
+                                        foreach (var item in lstLanguages)
+                                        {
+                                            bool IsFind = false;
+
+                                            if (lstEditLanguages != null)
+                                            {
+                                                foreach (var item1 in lstEditLanguages)
+                                                {
+                                                    if (item.LanguageId == item1.LanguageId)
+                                                    {
+                                                        <option data-select2-id="@item.LanguageId" selected value="@item.LanguageId">@item.LanguageTitle</option>
+                                                        IsFind = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+
+                                            if (IsFind == false)
+                                            {
+                                                <option data-select2-id="@item.LanguageId" value="@item.LanguageId">@item.LanguageTitle</option>
+                                            }
+                                        }
+
+                                        @*foreach (var item in lstLanguages)
+            {
+
+                if (lstEditLanguages != null)
+                {
+                    foreach (var item1 in lstEditLanguages)
+                    {
+                        if (item1.LanguageId == item.LanguageId)
+                        {
+                            <option data-select2-id="@item.LanguageId" value="@item.LanguageId" selected="selected">@item.LanguageTitle</option>
+                        }
+                        else
+                        {
+                            <option data-select2-id="@item.LanguageId" value="@item.LanguageId">@item.LanguageTitle</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option data-select2-id="@item.LanguageId" value="@item.LanguageId">@item.LanguageTitle</option>
+                }
+            }*@
+
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Joining Date*</label>
+                             
+                                <input value="@Model.JoiningDate.ToString("yyyy-MM-dd")" type="date" required="" id="txtJoiningDate" class="form-control" name="" placeholder="Select a date from calendar">
+                                @*<input value="@Model.JoiningDate.ToString("d")" required="" id="txtJoiningDate" type="date" class="form-control" name="">*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Discipline</label>
+
+
+                             
+                                <select id="ddlDisciplines" class="discipline select2-hidden-accessible" multiple="" data-placeholder="Select discipline" style="width: 100%;" data-select2-id="60" tabindex="-1" aria-hidden="true">
+                                    @{
+                                        IEnumerable<Discipline> lstDisciplines = ViewBag.dbDisciplineList;
+                                        IEnumerable<Discipline> lstEditDisciplines = (IEnumerable<Discipline>)ViewBag.DisciplineEditList;
+
+
+
+                                        foreach (var item in lstDisciplines)
+                                        {
+                                            bool IsFind = false;
+
+                                            if (lstEditDisciplines != null)
+                                            {
+                                                foreach (var item1 in lstEditDisciplines)
+                                                {
+                                                    if (item.DisciplineId == item1.DisciplineId)
+                                                    {
+                                                        <option data-select2-id="@item.DisciplineId" selected value="@item.DisciplineId">@item.DisciplineTitle</option>
+                                                        IsFind = true;
+                                                        break;
+                                                    }
+                                                }
+
+                                            }
+
+                                            if (IsFind == false)
+                                            {
+                                                <option data-select2-id="@item.DisciplineId" value="@item.DisciplineId">@item.DisciplineTitle</option>
+                                            }
+                                        }
+
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Specialties</label>
+
+                   
+
+                                <select id="ddlSpecialties" class="specialties select2-hidden-accessible" multiple="" data-placeholder="Select specialties" style="width: 100%;" data-select2-id="50" tabindex="-1" aria-hidden="true">
+                                    @{
+                                        IEnumerable<OA.Data.Model.Specialties> lstSpecialties = ViewBag.dbSpecialtiesList;
+                                        IEnumerable<OA.Data.Model.Specialties> lstEditSpecialties = ViewBag.SpecialtiesEditList;
+
+                                        foreach (var item in lstSpecialties)
+                                        {
+                                            bool IsFind = false;
+
+                                            if (lstEditSpecialties != null)
+                                            {
+                                                foreach (var item1 in lstEditSpecialties)
+                                                {
+                                                    if (item.SpecialtyId == item1.SpecialtyId)
+                                                    {
+                                                        <option data-select2-id="@item.SpecialtyId" selected value="@item.SpecialtyId">@item.SpecialtyTitle</option>
+                                                        IsFind = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+
+                                            if (IsFind == false)
+                                            {
+                                                <option data-select2-id="@item.SpecialtyId" value="@item.SpecialtyId">@item.SpecialtyTitle</option>
+                                            }
+                                        }
+
+
+                                        @*foreach (var item in lstSpecialties)
+            {
+
+                if (lstEditSpecialties != null)
+                {
+                    foreach (var item1 in lstEditSpecialties)
+                    {
+                        if (item1.SpecialtyId == item.SpecialtyId)
+                        {
+                            <option data-select2-id="@item.SpecialtyId" value="@item.SpecialtyId" selected="selected">@item.SpecialtyTitle</option>
+                        }
+                        else
+                        {
+                            <option data-select2-id="@item.SpecialtyId" value="@item.SpecialtyId">@item.SpecialtyTitle</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option data-select2-id="@item.SpecialtyId" value="@item.SpecialtyId">@item.SpecialtyTitle</option>
+                }
+            }*@
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Diesease Treatment Team</label>
+
+                                <select id="ddlTreatmentTeams" class="diesease select2-hidden-accessible" multiple="" data-placeholder="Select diesease treatment team" style="width: 100%;" data-select2-id="20" tabindex="-1" aria-hidden="true">
+                                    @{
+                                        IEnumerable<OA.Data.Model.TreatmentTeam> lstTreatmentTeam = ViewBag.dbTreatmentTeamsList;
+                                        IEnumerable<OA.Data.Model.TreatmentTeam> lstEditTreatmentTeam = ViewBag.TreatmentTeamsEditList;
+
+                                        foreach (var item in lstTreatmentTeam)
+                                        {
+                                            bool IsFind = false;
+
+                                            if (lstEditTreatmentTeam != null)
+                                            {
+                                                foreach (var item1 in lstEditTreatmentTeam)
+                                                {
+                                                    if (item.TreatmentTeamId == item1.TreatmentTeamId)
+                                                    {
+                                                        <option data-select2-id="@item.TreatmentTeamId" selected value="@item.TreatmentTeamId">@item.DiseaseTitle</option>
+                                                        IsFind = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+
+                                            if (IsFind == false)
+                                            {
+                                                <option data-select2-id="@item.TreatmentTeamId" value="@item.TreatmentTeamId">@item.DiseaseTitle</option>
+                                            }
+                                        }
+
+                                        @*foreach (var item in lstTreatmentTeam)
+            {
+
+                if (lstEditTreatmentTeam != null)
+                {
+                    foreach (var item1 in lstEditTreatmentTeam)
+                    {
+                        if (item1.TreatmentTeamId == item.TreatmentTeamId)
+                        {
+                            <option data-select2-id="@item.TreatmentTeamId" value="@item.TreatmentTeamId" selected="selected">@item.DiseaseTitle</option>
+                        }
+                        else
+                        {
+                            <option data-select2-id="@item.TreatmentTeamId" value="@item.TreatmentTeamId">@item.DiseaseTitle</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option data-select2-id="@item.TreatmentTeamId" value="@item.TreatmentTeamId">@item.DiseaseTitle</option>
+                }
+            }*@
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="buttons-group text-center mt-4">
+                        @*<button class="btn mr-2">Cancel</button>*@
+                        <a href="~/Physician/physiciansManagementList" class="btn mr-2">Cancel</a>
+                        @*<button id="btnSave" type="submit" onclick="javascript:dataAccess.loginService.addPhysician()" class="btn flat-btn ml-2">Save</button>*@
+                        <button id="btnSave" type="button" class="btn flat-btn ml-2">Update</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="loading">
+                @*<img id="loading-image" src="~/Content/theme/img/preloader.gif" alt="Loading..." />*@
+            </div>
+
+        </div>
+    </div>
+    <!-- /.row -->
+</div><!-- /.container-fluid -->
+<!-- /.content -->
+
+<script src="~/Content/theme/js/select2.full.min.js"></script>
+
+
+<script type="text/javascript">
+
+
+    //only allow numeric values in number
+    function isNumberKey(evt) {
+        debugger;
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+
+    //to disable future dates
+    $(function () {
+        var dtToday = new Date();
+
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+
+        var maxDate = year + '-' + month + '-' + day;
+        $('#txtJoiningDate').attr('max', maxDate);
+    });
+    
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    });
+
+    //Initialize Select2 Elements
+    $('.status').select2({
+        theme: 'bootstrap4'
+    });
+    
+    //Initialize Select2 Elements
+    $('.language').select2({
+        theme: 'bootstrap4'
+    });
+    //Initialize Select2 Elements 
+    $('.specialties').select2({
+        theme: 'bootstrap4'
+    });
+
+    //Initialize Select2 Elements 
+    $('.discipline').select2({
+        theme: 'bootstrap4'
+    });
+    
+    //Initialize Select2 Elements
+    $('.credentials').select2({
+        theme: 'bootstrap4'
+    });
+    //Initialize Select2 Elements
+    $('.diesease').select2({
+        theme: 'bootstrap4'
+    });
+
+    $("#profileImage").click(function (e) {
+
+        $("#imageUpload").click();
+    });
+
+    //function fasterPreview(uploader) {
+
+    //    if (uploader.files && uploader.files[0]) {
+    //        $('#setImage').attr('src',
+    //            window.URL.createObjectURL(uploader.files[0]));
+    //    }
+    //}
+
+    function fasterPreview(uploader) {
+        //      debugger;
+        if (uploader.files && uploader.files[0]) {
+            //$('#setImage').attr('src',
+            //    window.URL.createObjectURL(uploader.files[0]));
+
+            var File = uploader.files;
+            var reader = new FileReader();
+            reader.readAsDataURL(File[0]);
+
+            reader.onload = function (x) {
+                var image = new Image;
+                image.src = x.target.result;
+
+                image.onload = function () {
+                    //alert(1);
+                    //debugger;
+                    var width = this.width;
+                    var height = this.height;
+                    var type = File[0].type;
+
+                    if ((width <= "100" && height <= "100") && (type == "image/png" || type == "image/jpg" || type == "image/jpeg")) {
+                        $('#setImage').attr('src', x.target.result);
+                    }
+                    else {
+                        swal("Warning! invalid image!", "size must be 100x100 or less then 100x100 and type:png/jpg/jpeg");
+                        //alert(width + " " + height + " " + type);
+                    }
+
+                }
+
+
+
+            }
+        }
+    }
+
+    $("#imageUpload").change(function () {
+        fasterPreview(this);
+    });
+
+    $('#btnSave').click(function () {
+        debugger;
+
+        const selectedCredentials = Array.from(
+            ddlCredentials.querySelectorAll(':scope > option:checked'),
+            ({ value }) => value,
+        );
+
+        const selectedLanguages = Array.from(
+            ddlLanguages.querySelectorAll(':scope > option:checked'),
+            ({ value }) => value
+        );
+
+        const selectedDisciplines = Array.from(
+            ddlDisciplines.querySelectorAll(':scope > option:checked'),
+            ({ value }) => value
+        );
+
+        const selectedSpecialties = Array.from(
+            ddlSpecialties.querySelectorAll(':scope > option:checked'),
+            ({ value }) => value
+        );
+
+        const selectedTreatmentTeams = Array.from(
+            ddlTreatmentTeams.querySelectorAll(':scope > option:checked'),
+            ({ value }) => value
+        );
+
+        dataAccess.physicianService.EditPhysician(selectedCredentials, selectedLanguages, selectedDisciplines, selectedSpecialties, selectedTreatmentTeams);
+
+    });
+
+
+</script>
+
